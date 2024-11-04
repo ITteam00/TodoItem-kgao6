@@ -63,5 +63,38 @@ namespace ToDoList.Api.ApiTests
             Assert.False(returnedTodos.Done);
         }
 
+        [Fact]
+        public async void should_create_todoitem_v2()
+        {
+            // Arrange
+            var todoItem = new ToDoItem
+            {
+                Id = "5f9a7d8e2d3b4a1eb8a7d8e2",
+                Description = "test create v2",
+                Done = false,
+                Favorite = true
+            };
+
+            var json = JsonSerializer.Serialize(todoItem);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            // Act
+            var response = await _client.PostAsync("/api/v2/todoitemv2", content);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            var returnedTodos = JsonSerializer.Deserialize<ToDoItemDto>(responseContent, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            Assert.NotNull(returnedTodos);
+            Assert.Equal("test create v2", returnedTodos.Description);
+            Assert.True(returnedTodos.Favorite);
+            Assert.False(returnedTodos.Done);
+        }
+
     }
 }
