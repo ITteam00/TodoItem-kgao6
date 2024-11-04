@@ -2,10 +2,10 @@ namespace TodoItem.Infrastructure;
 
 public class TodoStoreDatabaseSettings
 {
-    public required string ConnectionString { get; set; }
+    public string ConnectionString { get; set; } = null!;
 
-    public required string DatabaseName { get; set; }
+    public string DatabaseName { get; set; } = null!;
 
-    public required string TodoItemsCollectionName { get; set; }
+    public string CollectionName { get; set; } = null!;
 
 }

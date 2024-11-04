@@ -9,12 +9,13 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.22" />    
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-      <PackageReference Include="MongoDB.Driver" Version="2.21.0" />
+      <PackageReference Include="MongoDB.Driver" Version="3.0.0" />
       <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
       <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TodoItem.Infrastructure\TodoItem.Infrastructure.csproj" />
     <ProjectReference Include="..\TodoItems.Core\TodoItems.Core.csproj" />
   </ItemGroup>
 

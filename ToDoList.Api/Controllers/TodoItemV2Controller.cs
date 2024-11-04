@@ -5,6 +5,7 @@ using ToDoList.Api.Models;
 using TodoItems.Core.service;
 using Swashbuckle.AspNetCore.Annotations;
 using MongoDB.Driver;
+using TodoItem.Infrastructure;
 
 namespace ToDoList.Api.Controllers
 {
@@ -14,11 +15,11 @@ namespace ToDoList.Api.Controllers
     [AllowAnonymous]
     public class TodoItemV2Controller : ControllerBase
     {
-        private readonly IToDoItemService _toDoItemService;
+        private readonly ITodoItemService _toDoItemService;
         private readonly ILogger<TodoItemV2Controller> _logger;
 
 
-        public TodoItemV2Controller(IToDoItemService toDoItemService, ILogger<TodoItemV2Controller> logger)
+        public TodoItemV2Controller(ITodoItemService toDoItemService, ILogger<TodoItemV2Controller> logger)
         {
             _toDoItemService = toDoItemService;
             _logger = logger;
@@ -37,16 +38,43 @@ namespace ToDoList.Api.Controllers
 
         public async Task<ActionResult<ToDoItemDto>> PostAsync([FromBody] ToDoItemCreateRequest toDoItemCreateRequest)
         {
-            var toDoItemDto = new ToDoItemDto
+            var toDoItemDto = new TodoItems.Core.Model.TodoItem
             {
                 Description = toDoItemCreateRequest.Description,
-                Done = toDoItemCreateRequest.Done,
-                Favorite = toDoItemCreateRequest.Favorite,
-                CreatedTime = DateTimeOffset.UtcNow
+                IsComplete = toDoItemCreateRequest.Done,
+                IsFavorite = toDoItemCreateRequest.Favorite,
+                CreateTime = DateTime.UtcNow,
+                DueDate = DateTime.Now
             };
-            return toDoItemDto;
+            var result=await _toDoItemService.CreateTodoItem(toDoItemDto);
+            return Created("", result);
         }
 
+        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(ToDoItemDto), 200)]
+        [ProducesResponseType(typeof(ToDoItemDto), 201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        [SwaggerOperation(
+            Summary = "Upsert Item",
+            Description = "Create or replace a to-do item by id"
+            )]
+        public async Task<ActionResult<ToDoItemDto>> PutAsync(string id, [FromBody] ToDoItemDto toDoItemDto)
+        {
+            var updatetoDoItemDto = new TodoItems.Core.Model.TodoItem
+            {
+                Id = toDoItemDto.Id,
+                Description = toDoItemDto.Description,
+                IsComplete = toDoItemDto.Done,
+                IsFavorite = toDoItemDto.Favorite,
+                CreateTime = DateTime.UtcNow,
+                DueDate = DateTime.Now,
+            };
+
+            _toDoItemService.ModifyTodoItem(updatetoDoItemDto.Id, updatetoDoItemDto);
+
+            return Ok(toDoItemDto);
+        }
     }
     }
 

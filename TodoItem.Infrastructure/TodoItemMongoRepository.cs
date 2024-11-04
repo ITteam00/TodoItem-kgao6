@@ -13,7 +13,7 @@ public class TodoItemMongoRepository: ITodoItemsRepository
     {
         var mongoClient = new MongoClient(todoStoreDatabaseSettings.Value.ConnectionString);
         var mongoDatabase = mongoClient.GetDatabase(todoStoreDatabaseSettings.Value.DatabaseName);
-        _todosCollection = mongoDatabase.GetCollection<TodoItemPo>(todoStoreDatabaseSettings.Value.TodoItemsCollectionName);
+        _todosCollection = mongoDatabase.GetCollection<TodoItemPo>(todoStoreDatabaseSettings.Value.CollectionName);
     }
 
     public async Task<TodoItems.Core.Model.TodoItem> FindById(string? id)
@@ -54,7 +54,9 @@ public class TodoItemMongoRepository: ITodoItemsRepository
 
     public async Task<TodoItems.Core.Model.TodoItem> CreateTodoItemAsync(TodoItems.Core.Model.TodoItem todoItem)
     {
+
         await _todosCollection.InsertOneAsync(ConvertToTodoItemPo(todoItem));
+
         return todoItem;
     }
 
