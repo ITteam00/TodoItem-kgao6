@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
-using ToDoList.Api.Exception;
 
 public class CustomExceptionFilter:IExceptionFilter
 {
