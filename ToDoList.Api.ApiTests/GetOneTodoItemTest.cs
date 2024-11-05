@@ -25,11 +25,9 @@ public class GetOneTodoItemTest : IClassFixture<WebApplicationFactory<Program>>,
 
     public async Task InitializeAsync()
     {
-        // 清空集合
         await _mongoCollection.DeleteManyAsync(FilterDefinition<ToDoItem>.Empty);
     }
 
-    // DisposeAsync 在测试完成后运行（如果有需要的话）
     public Task DisposeAsync() => Task.CompletedTask;
 
 
@@ -39,16 +37,17 @@ public class GetOneTodoItemTest : IClassFixture<WebApplicationFactory<Program>>,
         // Arrange
         var todoItem = new ToDoItem
         {
-            Id = "5f9a7d8e2d3b4a1eb8a7d8e2",
+            Id = "5f9a7d8e2d3b4a1eb8a7d8e3",
             Description = "Buy groceries",
             Done = false,
             Favorite = true
         };
 
         await _mongoCollection.InsertOneAsync(todoItem);
+        await Task.Delay(2000);
 
         // Act
-        var response = await _client.GetAsync("/api/v1/todoitems/5f9a7d8e2d3b4a1eb8a7d8e2");
+        var response = await _client.GetAsync("/api/v1/todoitems/5f9a7d8e2d3b4a1eb8a7d8e3");
 
         // Assert
         response.EnsureSuccessStatusCode();
